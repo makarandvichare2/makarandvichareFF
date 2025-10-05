@@ -1,0 +1,40 @@
+Store data in ngRx store instead of using cach
+
+<div class="list-container">
+  <div *ngIf="newsResponse.loading" class="loading-indicator">
+    <p data-cy="loading-message" data-testid="loading-message">
+      Loading news...
+    </p>
+    <fa-icon [icon]="faSpinner" class="spinner" />
+  </div>
+
+  <div
+    data-cy="error-message"
+    data-testid="error-message"
+    *ngIf="newsResponse.error"
+    class="error-message"
+  >
+    <p>Failed to load news. Please try again later.</p>
+  </div>
+
+  <div *ngIf="newsResponse.data.length > 0">
+    <div *ngFor="let newsItem of newsResponse.data; let i = index">
+      <app-news-item
+        data-cy="news-item"
+        data-testid="news-item"
+        [newsItem]="newsItem"
+        [itemIndex]="i + 1"
+      ></app-news-item>
+    </div>
+  </div>
+  <div class="more-link-section" *ngIf="newsResponse.data.length > 0">
+    <button
+      class="more-button"
+      data-cy="load-more-button"
+      data-testid="load-more-button"
+      (click)="loadMore()"
+    >
+      Read More News
+    </button>
+  </div>
+</div>

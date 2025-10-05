@@ -13,7 +13,7 @@ export class TopMenuComponent {
   constructor(private newsService: NewsService, private router: Router) {
 
   }
-  activeItem = 'Top News';
+  activeItem = 'NgRx Use';
 
   private setActiveItem(itemName: string): void {
     this.activeItem = itemName;
@@ -40,5 +40,13 @@ export class TopMenuComponent {
     this.setActiveItem(itemName);
     event.preventDefault();
     this.router.navigate(['/download']);
+  }
+
+  getNgrxNews(itemName: string, event: Event) {
+
+    this.setActiveItem(itemName);
+    event.preventDefault();
+    this.router.navigate(['/dashboard-ngrx']);
+    this.newsService.getNews(NewsSelection.Top);
   }
 }
