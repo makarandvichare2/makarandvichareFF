@@ -33,9 +33,20 @@ export class DownloadCsvComponent {
       };
 
       // 3. Post the message (data) to the worker to start the task
+      const headers: Record<string, string> = {
+        "by": "By",
+        "descendants": "Comment Counts",
+        "id": "Id",
+        "score": "Score",
+        "time": "Time",
+        "title": "Title",
+        "type": "Type",
+        "url": "Url"
+      };
+
       const data = {
         csvData: this.dashboardComponent.newsResponse.data,
-        headers: ["By", "Descendants", "Id", "Score", "Time", "Title", "Type", "Url"]
+        headers: headers
       } as IWorkerInput;
       worker.postMessage(data);
 

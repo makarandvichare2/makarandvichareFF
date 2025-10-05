@@ -1,4 +1,3 @@
-import { DownloadNewsItemType } from "../type/custom.types";
 import moment from "moment";
 import { nullableString } from "../../common/types/nullable-string.type";
 import { IApiNewsItem } from "../../dashboard/interfaces/news-item.interface";
@@ -18,15 +17,16 @@ export class Helpers {
     URL.revokeObjectURL(url);
   }
 
-  static generateCSV(data: IApiNewsItem[], headers: string[]) {
-    const colHeaders = Object.keys(data[0]).filter(o => o !== 'kids');
-    const csvHeaders = headers.join(',');
-    const csvRows = data.map((row: object) => {
-      const indexableRow = row as DownloadNewsItemType;
-      return colHeaders.map((header: string) => {
-        let value = indexableRow[header as keyof DownloadNewsItemType] === null || indexableRow[header as keyof DownloadNewsItemType] === undefined
+  static generateCSV(data: IApiNewsItem[], headers: Record<string, string>) {
+
+    const colHeaderKeys = Object.keys(headers);
+    const colHeaderCaptions = Object.values(headers);
+    const csvRows = data.map((row: IApiNewsItem) => {
+      return colHeaderKeys.map((header: string) => {
+        let value = (row[header as keyof IApiNewsItem] === null
+          || row[header as keyof IApiNewsItem] === undefined)
           ? ''
-          : String(Helpers.transform(indexableRow, header));
+          : String(Helpers.transform(row, header));
 
         if (value.includes(',') || value.includes('"') || value.includes('\n')) {
           value = '"' + value.replace(/"/g, '""') + '"';
@@ -34,7 +34,7 @@ export class Helpers {
         return value;
       }).join(',');
     });
-    return csvHeaders + '\n' + csvRows.join('\n');
+    return colHeaderCaptions.join(',') + '\n' + csvRows.join('\n');
   }
   // private static transformData<T extends PipeTransform>(value: unknown,
   //   PipeClass: PipeConstructor<T>,
@@ -49,14 +49,14 @@ export class Helpers {
   //   return pipeInstance.transform(value) as ReturnType<T['transform']>;;
   // }
 
-  private static transform(indexableRow: Record<string, unknown>, header: string) {
+  private static transform(indexableRow: IApiNewsItem, header: string) {
     if (header === 'time') {
-      return moment(indexableRow[header] as number * 1000).fromNow();
+      return moment(indexableRow[header as keyof IApiNewsItem] as number * 1000).fromNow();
     }
     else if (header === 'title') {
-      return Helpers.getNewsTitleWithDomainUrl(indexableRow[header] as nullableString, String(indexableRow['url']));
+      return Helpers.getNewsTitleWithDomainUrl(indexableRow[header as keyof IApiNewsItem] as nullableString, String(indexableRow['url' as keyof IApiNewsItem]));
     }
-    return indexableRow[header];
+    return indexableRow[header as keyof IApiNewsItem];
   }
 
   static getNewsTitleWithDomainUrl(value: nullableString, ...args: string[]) {

@@ -9,6 +9,5 @@ export interface IApiNewsItem {
   url: string;
   score: number;
   descendants: number;
-  kids: number;
 }
 
