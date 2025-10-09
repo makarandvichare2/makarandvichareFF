@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import * as NewsItemActions from '../actions/news-item.actions';
 import { catchError, map, of, switchMap } from "rxjs";
@@ -8,10 +8,9 @@ import { ApiEndPoints } from "../../dashboard/constants/api-endpoints.const";
 
 @Injectable()
 export class NewsItemEffects {
-  constructor(
-    private actions$: Actions,
-    private http: HttpClient
-  ) { }
+
+  private actions$ = inject(Actions);
+  private http = inject(HttpClient);
 
   loadNewsItemIds$ = createEffect(() =>
     this.actions$.pipe(
