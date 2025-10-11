@@ -1,8 +1,12 @@
 import { NewsDashBoardComponent } from './../../../dashboard/components/news-dashboard/news-dashboard.component';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IWorkerInput } from '../../interfaces/worker-input.interface';
 import { Helpers } from '../../services/helper';
+import { filter } from 'rxjs';
+import { NavigationEnd, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { PopupComponent } from '../../../withngRx/components/popup/popup.component';
 /// <reference lib="webworker" />
 @Component({
   selector: 'app-download-csv',
@@ -10,11 +14,17 @@ import { Helpers } from '../../services/helper';
   templateUrl: './download-csv.component.html',
   styleUrl: './download-csv.component.scss'
 })
-export class DownloadCsvComponent {
-
+export class DownloadCsvComponent implements OnInit {
+  constructor(private router: Router, private dialog: MatDialog) { }
   result = '';
   @ViewChild(NewsDashBoardComponent) dashboardComponent!: NewsDashBoardComponent;
-
+  ngOnInit() {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.openModalOnRouteChange();
+      });
+  }
   download() {
     if (typeof Worker !== 'undefined') {
       this.result = 'Calculating in background...';
@@ -54,5 +64,11 @@ export class DownloadCsvComponent {
       // Fallback: Web Workers are not supported
       this.result = 'Web Workers not supported.';
     }
+  }
+  openModalOnRouteChange() {
+    this.dialog.open(PopupComponent, {
+      width: '400px',
+      disableClose: true
+    });
   }
 }

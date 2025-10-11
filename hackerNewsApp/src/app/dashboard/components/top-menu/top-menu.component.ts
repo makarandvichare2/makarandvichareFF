@@ -49,4 +49,11 @@ export class TopMenuComponent {
     this.router.navigate(['/dashboard-ngrx']);
     this.newsService.getNews(NewsSelection.Top);
   }
+
+  getEmpty(itemName: string, event: Event) {
+
+    this.setActiveItem(itemName);
+    event.preventDefault();
+    this.router.navigate(['/empty-page']);
+  }
 }

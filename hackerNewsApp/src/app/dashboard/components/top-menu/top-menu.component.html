@@ -36,6 +36,13 @@
       >NgRx Use</a
     >
     <span class="nav-divider"></span>
+    <a
+      (click)="getEmpty('Empty Page', $event)"
+      [class.active]="activeItem === 'Empty Page'"
+      class="nav-link"
+      >Empty Page</a
+    >
+    <span class="nav-divider"></span>
   </div>
 
   <div class="nav-right">

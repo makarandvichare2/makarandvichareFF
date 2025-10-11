@@ -1,3 +1,4 @@
+import { EmptyPageComponent } from './withngRx/components/empty-page/empty-page.component';
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -15,5 +16,10 @@ export const routes: Routes = [
     path: 'dashboard-ngrx',
     loadComponent: () => import('./withngRx/components/dashboard-ng-rx/dashboard-ng-rx.component')
       .then(m => m.DashboardNgRxComponent)
-  }
+  },
+  {
+    path: 'empty-page',
+    loadComponent: () => import('./withngRx/components/empty-page/empty-page.component')
+      .then(m => m.EmptyPageComponent)
+  },
 ];

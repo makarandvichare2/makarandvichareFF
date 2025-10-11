@@ -32,7 +32,8 @@ export class DashboardNgRxComponent implements OnInit, OnDestroy, AfterViewCheck
     // this.scrollToBottom();
     //this.scrollDirective.scrollTo(); // works
     //this.scrollTo();
-    this.targetBtn.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (this.targetBtn?.nativeElement)
+      this.targetBtn.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
   // ngAfterViewInit(): void {
   //   this.scrollToButton1();
