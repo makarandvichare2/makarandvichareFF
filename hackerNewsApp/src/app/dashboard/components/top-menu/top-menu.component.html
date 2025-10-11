@@ -3,42 +3,42 @@
     <span class="site-logo">Y</span>
     <a
       (click)="getTopNews('Hacker News', $event)"
-      [class.active]="activeItem === 'Hacker News'"
+      [class.active]="navigationService.activeItem === 'Hacker News'"
       class="nav-link bold"
       >Hacker News</a
     >
     <span class="nav-divider"></span>
     <a
       (click)="getTopNews('Top News', $event)"
-      [class.active]="activeItem === 'Top News'"
+      [class.active]="navigationService.activeItem === 'Top News'"
       class="nav-link"
       >Top News</a
     >
     <span class="nav-divider"></span>
     <a
       (click)="getLatestNews('Latest News', $event)"
-      [class.active]="activeItem === 'Latest News'"
+      [class.active]="navigationService.activeItem === 'Latest News'"
       class="nav-link"
       >Latest News</a
     >
     <span class="nav-divider"></span>
     <a
       (click)="getCsv('Download', $event)"
-      [class.active]="activeItem === 'Download'"
+      [class.active]="navigationService.activeItem === 'Download'"
       class="nav-link"
       >Download</a
     >
     <span class="nav-divider"></span>
     <a
       (click)="getNgrxNews('NgRx Use', $event)"
-      [class.active]="activeItem === 'NgRx Use'"
+      [class.active]="navigationService.activeItem === 'NgRx Use'"
       class="nav-link"
       >NgRx Use</a
     >
     <span class="nav-divider"></span>
     <a
       (click)="getEmpty('Empty Page', $event)"
-      [class.active]="activeItem === 'Empty Page'"
+      [class.active]="navigationService.activeItem === 'Empty Page'"
       class="nav-link"
       >Empty Page</a
     >
@@ -46,6 +46,10 @@
   </div>
 
   <div class="nav-right">
-    <a [class.active]="activeItem === 'login'" class="nav-link">Login</a>
+    <a
+      [class.active]="navigationService.activeItem === 'login'"
+      class="nav-link"
+      >Login</a
+    >
   </div>
 </div>

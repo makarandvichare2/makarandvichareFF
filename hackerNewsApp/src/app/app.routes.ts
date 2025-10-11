@@ -1,10 +1,13 @@
+import { ConfirmExitGuard } from './common/RouteGuard/confirm-exit.guard';
 import { EmptyPageComponent } from './withngRx/components/empty-page/empty-page.component';
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'dashboard-ngrx' },
   {
-    path: 'download', loadComponent: () => import('./web-worker-feature/components/download-csv/download-csv.component')
+    path: 'download',
+    canDeactivate: [ConfirmExitGuard],
+    loadComponent: () => import('./web-worker-feature/components/download-csv/download-csv.component')
       .then(m => m.DownloadCsvComponent)
   },
   {

@@ -3,10 +3,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IWorkerInput } from '../../interfaces/worker-input.interface';
 import { Helpers } from '../../services/helper';
-import { filter } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { PopupComponent } from '../../../withngRx/components/popup/popup.component';
+import { PopupComponent } from '../../../common/components/popup/popup.component';
+import { ConfirmationDialogComponent } from '../../../common/components/confirmation-dialog/confirmation-dialog.component';
+import { ICanDeactivate } from '../../../common/interfaces/can-deactivate.interface';
 /// <reference lib="webworker" />
 @Component({
   selector: 'app-download-csv',
@@ -14,15 +16,17 @@ import { PopupComponent } from '../../../withngRx/components/popup/popup.compone
   templateUrl: './download-csv.component.html',
   styleUrl: './download-csv.component.scss'
 })
-export class DownloadCsvComponent implements OnInit {
+export class DownloadCsvComponent implements OnInit, ICanDeactivate {
   constructor(private router: Router, private dialog: MatDialog) { }
+
   result = '';
+  saved = false;
   @ViewChild(NewsDashBoardComponent) dashboardComponent!: NewsDashBoardComponent;
   ngOnInit() {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
-        this.openModalOnRouteChange();
+        // this.openModalOnRouteChange();
       });
   }
   download() {
@@ -59,6 +63,7 @@ export class DownloadCsvComponent implements OnInit {
         headers: headers
       } as IWorkerInput;
       worker.postMessage(data);
+      this.saved = true;
 
     } else {
       // Fallback: Web Workers are not supported
@@ -70,5 +75,25 @@ export class DownloadCsvComponent implements OnInit {
       width: '400px',
       disableClose: true
     });
+  }
+
+  openConfirm() {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '350px',
+      data: { message: 'Are you sure you want to delete this item?' },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('User confirmed!');
+        // Place your deletion logic here
+      } else {
+        console.log('User cancelled!');
+      }
+    });
+  }
+
+  canDeactivate(): boolean | Observable<boolean> {
+    return this.saved;
   }
 }
