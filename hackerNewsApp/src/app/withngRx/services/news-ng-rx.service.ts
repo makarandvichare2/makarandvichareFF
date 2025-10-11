@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, EMPTY, forkJoin, Observable, shareReplay, switchMap } from 'rxjs';
+import { BehaviorSubject, catchError, EMPTY, exhaustMap, forkJoin, Observable, of, shareReplay, switchMap } from 'rxjs';
 import { NewsSelection } from '../../dashboard/enums/news-selection.enum';
 import { Pagination } from '../../dashboard/models/pagination.model';
 import { environment } from '../../common/enviornment/enviornment.dev';
@@ -71,12 +71,12 @@ export class NewsNgRxService {
       })
     );
 
-    this.topNewsItemFromStore$ = this.store.pipe(select(state => state.entities.newsItemIds));
+    this.topNewsItemFromStore$ = this.store.pipe(select(state => state.newsItems.newsItemIds));
   }
 
   combinedNewsInfo(pageInfo: Pagination) {
     return this.newItemIdsCache$.pipe(
-      switchMap((newsItemsIds: number[]) => {
+      exhaustMap((newsItemsIds: number[]) => {
         if (newsItemsIds.length === 0) {
           return EMPTY;
         }

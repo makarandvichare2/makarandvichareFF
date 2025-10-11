@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, EMPTY, forkJoin, Observable, shareReplay, switchMap } from 'rxjs';
+import { BehaviorSubject, EMPTY, exhaustMap, forkJoin, Observable, shareReplay, switchMap } from 'rxjs';
 import { IApiNewsItem } from '../interfaces/news-item.interface';
 import { environment } from '../../common/enviornment/enviornment.dev';
 import { ApiEndPoints } from '../constants/api-endpoints.const';
@@ -69,7 +69,7 @@ export class NewsService {
 
   combinedNewsInfo(pageInfo: Pagination) {
     return this.newItemIdsCache$.pipe(
-      switchMap((newsItemsIds: number[]) => {
+      exhaustMap((newsItemsIds: number[]) => {
         if (newsItemsIds.length === 0) {
           return EMPTY;
         }

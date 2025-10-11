@@ -21,9 +21,13 @@ export class NewsItemEffects {
         this.http.get<number[]>(environment.apiUrl + ApiEndPoints.TopStoriesEndPoint)
           .pipe(
             // 3. If successful, map the data to the 'loadNewsItemIdsSuccess' action
-            map(ids => NewsItemActions.loadNewsItemIdsSuccess({ newsItemIds: ids })),
+            map(ids => {
+              return NewsItemActions.loadNewsItemIdsSuccess({ newsItemIds: ids });
+            }),
             // 4. If error, catch it and map it to the 'loadNewsItemIdsFailure' action
-            catchError(error => of(NewsItemActions.loadNewsItemIdsFailure({ error })))
+            catchError(error => {
+              return of(NewsItemActions.loadNewsItemIdsFailure({ error }))
+            })
           )
       )
     )

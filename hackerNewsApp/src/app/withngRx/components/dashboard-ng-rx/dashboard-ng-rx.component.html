@@ -14,11 +14,14 @@ Store data in ngRx store instead of using cach
     *ngIf="newsResponse.error"
     class="error-message"
   >
-    <p>Failed to load news. Please try again later.</p>
+    <p>{{ newsResponse.error }}</p>
   </div>
 
   <div *ngIf="newsResponse.data.length > 0">
-    <div *ngFor="let newsItem of newsResponse.data; let i = index">
+    <div
+      #scrollContainer
+      *ngFor="let newsItem of newsResponse.data; let i = index"
+    >
       <app-news-item
         data-cy="news-item"
         data-testid="news-item"
@@ -29,10 +32,15 @@ Store data in ngRx store instead of using cach
   </div>
   <div class="more-link-section" *ngIf="newsResponse.data.length > 0">
     <button
+      id="moreBtn"
       class="more-button"
       data-cy="load-more-button"
       data-testid="load-more-button"
+      [disabled]="newsResponse.loading"
       (click)="loadMore()"
+      appScrollTo
+      #scrollDirective="appScrollTo"
+      #moreBtn
     >
       Read More News
     </button>

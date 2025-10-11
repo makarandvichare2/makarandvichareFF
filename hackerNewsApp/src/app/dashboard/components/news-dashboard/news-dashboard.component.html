@@ -30,6 +30,7 @@
       class="more-button"
       data-cy="load-more-button"
       data-testid="load-more-button"
+      [disabled]="newsResponse.loading"
       (click)="loadMore()"
     >
       Read More News
