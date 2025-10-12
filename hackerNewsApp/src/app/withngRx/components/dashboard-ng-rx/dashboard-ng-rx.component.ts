@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { catchError, combineLatest, EMPTY, filter, Subscription, switchMap, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -22,18 +22,19 @@ export class DashboardNgRxComponent implements OnInit, OnDestroy, AfterViewCheck
   @ViewChild('moreBtn') targetBtn!: ElementRef;
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
   @ViewChild('scrollDirective') scrollDirective!: ScrollToDirective;
-  constructor(private newsService: NewsNgRxService) {
+  constructor(private newsService: NewsNgRxService, private ngZone: NgZone) {
     this.setupNewsListener();
   }
   ngAfterViewChecked(): void {
+    console.log("commented since it fire every mouse click");
     // this.scrollToButtonInsideScrollableDiv();
     // this.scrollToButton1(); // works
     //this.scrollToButton(); // works
     // this.scrollToBottom();
     //this.scrollDirective.scrollTo(); // works
     //this.scrollTo();
-    if (this.targetBtn?.nativeElement)
-      this.targetBtn.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // if (this.targetBtn?.nativeElement)
+    //   this.targetBtn.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
   // ngAfterViewInit(): void {
   //   this.scrollToButton1();
@@ -82,7 +83,23 @@ export class DashboardNgRxComponent implements OnInit, OnDestroy, AfterViewCheck
           this.newsResponse.data.push(...newsItems);
           this.newsResponse.loading = false;
           this.newsResponse.error = null;
+          console.log('subscribe');
+          this.scrollAfterRender();
         })
+  }
+
+  private scrollAfterRender() {
+    this.ngZone.runOutsideAngular(() => {
+      console.log('outside');
+      setTimeout(() => {
+        window.requestAnimationFrame(() => {
+          if (this.targetBtn?.nativeElement) {
+            console.log('setTimeout');
+            this.targetBtn.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        });
+      });
+    });
   }
 
   private scrollTo() {

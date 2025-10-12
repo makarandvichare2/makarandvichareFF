@@ -57,3 +57,32 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+Recommended Process for Pre-PR Performance Testing
+The best way to test performance is by running the actual production build with a simple, static web server.
+
+1. Create the Optimized Build
+Run the standard build command. This compiles your code with all production optimizations (tree-shaking, minification, AOT, etc.) and writes the optimized static assets to the dist/ folder.
+
+Bash
+
+ng build
+Note: In modern Angular CLI versions, ng build defaults to the production configuration. If you have a custom configuration, you may need to specify it: ng build --configuration=production.
+
+2. Serve the Static Files Locally
+Since ng build only creates files and doesn't run a server, you need a lightweight static HTTP server to host the output from the dist/ folder. This is a much better representation of how your app will perform on a real server (like Nginx or Apache).
+
+A very common, easy-to-use option is http-server (a simple, zero-configuration command-line http server).
+
+Install it globally (if you don't have it):
+
+Bash
+
+npm install -g http-server
+Navigate to your build folder and run the server:
+
+Bash
+
+cd dist/your-project-name
+http-server -c-1
+The -c-1 flag disables caching, which is good for initial performance testing.
